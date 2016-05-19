@@ -52,3 +52,5 @@ all forms are protected by <a href="https://en.wikipedia.org/wiki/Cross-site_req
 + Reset functionality (forgot password, bypass ip restrictions etc) is disabled for login accounts with the admin role.
 + 100% compliant with a strict Secure-Content-Policy of "default-src 'self'"
 + Bloody fast and very scalable architecture! (Redis used as a session cache and key/value store for asynchronous message queue, postgres database connections are pooled, optimized for http/2, uwsgi workers with nginx as reverse proxy for the application server)
+
+(c) punto1.uno, may 2016
