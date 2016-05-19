@@ -1,32 +1,44 @@
 # punto1-authenticator
 *a very secure authentication module, implementing many features to prevent unauthorized access, credentials theft, data leaks and attacks*
 
-If users are to trust their confident data to our systems, they should expect a huge commitment from us to keep their data safe. Authentication is an important part of a secure system. The <a href="https://www.punto1.uno">P U N T O 1 . U N O</a> authentication module implements a lot of features to prevent unauthorized access, credentials theft, data leaks and attacks. Theoretically, all security is breakable. But to be efficient, breaking the security has to be too costly (in time and other resources) to be worth the effort. Our authentication module addresses man-in-the-middle attacks, replay attacks, brute-force attacks and cross-scripting attacks. Good securty is complex too. If you are interested, read on! 
+If users are to trust their confident data to our systems, they should expect a huge commitment from us to keep their data safe. Authentication is an important part of a secure system. The <a href="https://auth.punto1.uno" title="demo authentication module">P U N T O 1 . U N O</a> authentication module implements a lot of features to prevent unauthorized access, credentials theft, data leaks and attacks. Theoretically, all security is breakable. But to be efficient, breaking the security has to be too costly (in time and other resources) to be worth the effort. Our authentication module addresses man-in-the-middle attacks, replay attacks, brute-force attacks and cross-scripting attacks. 
+
+The punto1-authenticator is an excellent basis to kickstart a new system. If you are interested in using it for your next project, please contact me at <informes> at punto1.uno. I am willing to open source the code after I have gained back the initial investment costs.
+
+Good securty is complex too. If you are interested, read on! 
 
 ## Monitoring and restricting access:
-The account user has a lot of options in the punto1-authenticator module to restrict and monitor access (2-factor authentication, ip restrictions, email warnings). Login accounts with admin privileges can't reset their credentials, and the admin role is only enabled when the 2-factor authentication (<a href="https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm" title="time-based one-time password algorithm">TOTP</a>) is configured, whereby an application on the user's smartphone generates every 30 seconds a unique code for the login account, which is known by the server by a secret that is shared between the server and the smartphone upon cnfiguration via a QR-code. The login is throttled at 3 attempts within 5 minutes before triggering a timeout. Accounts are easily disabled by users with the admin role, and accounts can be given temporary access too. The system can enforce a user to change his/her credentials periodically, depending on the credentials policy that can be configured per user differently. 
+The account user has a lot of options in the punto1-authenticator module to restrict and monitor access (2-factor authentication, ip restrictions, email warnings). Login accounts with admin privileges can't reset their credentials, and the admin role is only enabled when the 2-factor authentication (<a href="https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm" title="time-based one-time password algorithm">TOTP</a>) is configured, whereby an application on the user's smartphone generates every 30 seconds a unique code for the login account, which is known by the server by a secret that is shared between the server and the smartphone upon cnfiguration via a QR-code. The login is throttled at 3 attempts within 5 minutes before triggering a timeout. Accounts are easily disabled by users with the admin role, and accounts can also be given temporary access. The system can enforce a user to change his/her credentials periodically, depending on the policy that can be configured differently for every individual user. 
 
 ## Storage:
-The <a href="https://password-hashing.net/">state-of-the-art memory-hard Argon2 hash function</a> is used to store the credentials in the database. Above, the credentials that are hashed by the argon2 function is not the pass phrase that the user gave, but a sha-512 hash of a long random salt value (different for every login account) and the pass phrase. Hence, even if one would be able to crack the argon2 hash, there is another hash to find collisions for. 
+The <a href="https://password-hashing.net/">state-of-the-art memory-hard Argon2 hash function</a> is used to store the credentials in the database. Above, the credentials that are hashed by the argon2 function is not the original pass phrase that the user gave, but a sha-512 hash of a long random salt value (different for every login account) and the pass phrase. Hence, even if one would be able to crack the argon2 hash, there is another hash to find collisions for. 
 
 ## Communication between browser & server:
-The credentials are encrypted before they are sent to the server. So even if the login page weren't protected by https <a href="https://www.ssllabs.com/ssltest/analyze.html?d=auth.punto1.uno&latest" title="web server configuration audit">(correctly configured with Forward Secrecy, strong ciphers, http/2, hsts, oscp-stapling, variable DH-params etc.)</a>, the credentials sent to the server can't be intercepted. The credentials are symmetrically encrypted by AES at the browser, and the encryption/decryption key is a hash that is strengthened by the key derivation function pbkdf2. The input for the pbkdf2 hash is a concatenation of 3 strings: the unique one-time server-nonce (generated for every page request to the login page), the unique one-time client-nonce (generated by the browser every time the login page is loaded), and the pin code or - if configured by the user - the result of the TOTP 2-factor authentication string generated by an application on your smartphone. The resulting cipher text and the client nonce are sent to the server, which has to determine the value for the decryption key first before being able to obtain the credentials, which thereafter has to be verified against the stored hash. 
+The credentials are encrypted before they are sent to the server. So even if the login page weren't protected by https <a href="https://www.ssllabs.com/ssltest/analyze.html?d=auth.punto1.uno&latest" title="web server configuration audit">(correctly configured with Forward Secrecy, strong ciphers, http/2, hsts, oscp-stapling, variable DH-params etc.)</a>, the credentials sent to the server can't be intercepted. The credentials are symmetrically encrypted by AES at the browser, and the encryption/decryption key is a hash that is strengthened by the key derivation function pbkdf2. The input for the pbkdf2 hash is a concatenation of 3 strings: the unique one-time server-nonce (generated again for every page request to the login page), the unique one-time client-nonce (generated by the browser every time the login page is loaded), and the pin code or - if configured by the user - the result of the TOTP 2-factor authentication string generated by an application on your smartphone. The resulting cipher text and the client nonce are sent to the server, which has to determine the value for the decryption key first before being able to obtain the credentials, which thereafter has to be verified against the stored hash. 
 
 ## Thwart key loggers:
 In case the user has not configured 2-factor authentication and hence uses a pincode, the surface attack is bit smaller if we can thwart most key loggers. (are we too paranoid here?)
 
 ## Promotes a high level of Operational Security ("OPSEC")
-The weakest link in a system are humans. Policies and procedures to enforce - otp & role enabling, pwd reset, change credentials policy, password complexity, ip restrictions, email notifications, logging 
+The weakest link in a system are humans. Choosing weak passwords, don't change passwords frequently and not restricting access can severely endanger the security of a system. The punto1-authenticator enforces policies to enforces good passwords, facilitates frequent password changes, obliges to use 2-factor authentication methods if a user wishes to obtain more privileges, logs and notifies any account activity and disables recoverability of the account credentials for accounts with privileged authorizations. All these measures contribute to operational security and to security awareness.
 
-## Maximizes the browser capabilities to minimize security risks
-The code in the module adheres to the new "Content Security Policy (CSP)", by telling the browser via a response header that it should not permit inline style en code, and that only resources from the application's domain are allowed. This prevents most cross-scripting possibilities. Above, for all requests to a form a unique CSRF token is generated and verified again by the server when forms are submitted.
+## Minimizes the browser as an attack vector
+The browser is designed to execute untrusted code that is downloaded from the internet. As such, it is a favourite vector for  malevolents to hijack sessions, forge requests and run code. 
+The code in the punto1-authentication module adheres to the new "Content Security Policy (CSP)", by telling the browser via a response header that it should not permit inline style en code, and that only resources from the application's domain are allowed. This prevents most cross-scripting possibilities. Above, for all form requests a unique CSRF token is generated and verified again by the server when forms are submitted. Other measures to counter any possibilities for abuse are: 
+- The session id of cookie is a random string of 72-character length, preventing brute-force guessing.
+- The session id changes upon login and logout, prevents session fixation / replay attacks.
+- Session data is stored encrypted on server side
+- The session cookie is only set when the site is delivered over https, to prevent session hijacking.
+
 
 ## Technology stack:
-+ Python 3.5, Pyramid, SqlAlchemy, jinja2, Beaker & more
-+ Foundation & jquery & more
+The punto1-authenticator module is bloody fast and has a very scalable architecture. Redis is used as a session cache and as the key/value store for an asynchronous message queue, a postgres database as the main data store (with pooled connections off course), the site is optimized for http/2, and multiple uwsgi workers serve the application with nginx as a reverse proxy. 
+The main components of the used technology stack:
++ Python 3, Pyramid, SqlAlchemy, jinja2, Beaker
++ Foundation & jquery
 + Postgres & Redis
 + Nginx, uwsgi
-
+ 
 ## Summarized:
 + The original password never leaves the browser! A salted hash is symmetrically encrypted (with a one-time key) before it is sent to the server and stored or verified with the memory-hard argon2 algorithm.
 + The login is validated by comparing the resulting hash of a combination of a 1-time clientnonce, 1-time servernonce, pincode and password hash, to prevent replays. That resulting hash and the clientnonce are the only data that is presented to the server upon login.
@@ -53,4 +65,4 @@ all forms are protected by <a href="https://en.wikipedia.org/wiki/Cross-site_req
 + 100% compliant with a strict Secure-Content-Policy of "default-src 'self'"
 + Bloody fast and very scalable architecture! (Redis used as a session cache and key/value store for asynchronous message queue, postgres database connections are pooled, optimized for http/2, uwsgi workers with nginx as reverse proxy for the application server)
 
-(c) punto1.uno, may 2016
+© DouweM, punto1.uno, may 2016
