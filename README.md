@@ -25,7 +25,7 @@ In case the user has not configured 2-factor authentication and hence uses a pin
 
 
 ## Promotes a high level of Operational Security ("OPSEC")
-The weakest link in a system are humans. Choosing weak passwords, don't change passwords frequently and not restricting access can severely endanger the security of a system. The punto1-authenticator enforces policies to enforces good passwords, facilitates frequent password changes, obliges to use 2-factor authentication methods if a user wishes to obtain more privileges, logs and notifies any account activity and disables recoverability of the account credentials for accounts with privileged authorizations. All these measures contribute to operational security and to security awareness.
+The weakest link in a system are humans. Choosing weak passwords, don't change passwords frequently and not restricting access can severely endanger the security of a system. The punto1-authenticator enforces policies to use strong passwords, facilitates frequent password changes, obliges to use 2-factor authentication methods if a user wishes to obtain more privileges, logs and notifies any account activity and disables recoverability of the account credentials for accounts with privileged authorizations. All these measures contribute to operational security and to security awareness.
 
 
 ## Minimizes the browser as an attack vector
@@ -72,4 +72,4 @@ all forms are protected by <a href="https://en.wikipedia.org/wiki/Cross-site_req
 + 100% compliant with a strict Secure-Content-Policy of "default-src 'self'"
 + Bloody fast and very scalable architecture! (Redis used as a session cache and key/value store for asynchronous message queue, postgres database connections are pooled, optimized for http/2, uwsgi workers with nginx as reverse proxy for the application server)
 
-© DouweM, punto1.uno, may 2016
+© DouweM, punto1.uno, May 2016
