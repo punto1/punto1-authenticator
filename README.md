@@ -4,7 +4,7 @@
 If users are to trust their confident data to our systems, they should expect a huge commitment from us to keep their data safe. Authentication is an important part of a secure system. The <a href="https://auth.punto1.uno" title="demo authentication module">P U N T O 1 . U N O</a> authentication module implements many features to prevent unauthorized access, credentials theft, data leaks and attacks. Theoretically, all security is breakable. But to be efficient, breaking the security has to be too costly (in time and other resources) to be worth the effort. Our authentication module addresses man-in-the-middle attacks, replay attacks, brute-force attacks and cross-scripting attacks. 
 
 > The punto1-authenticator is an excellent basis to kickstart a new system. If you are interested 
-> in using it for your next project, please contact me at <informes> at punto1.uno. I am willing to 
+> in using it for your next project, please contact me at  __informes__ __at__ __punto1.uno__. I am willing to 
 > open source the code after I have gained back the initial investment costs.
 
 Good securty is complex too. If you are interested, read on! 
